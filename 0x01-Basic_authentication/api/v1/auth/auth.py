@@ -18,9 +18,10 @@ class Auth:
 
     def authorization_header(self, request=None) -> str:
         """Handles authorization header"""
-        auth_val = request.headers.get('Authorization')
-        if auth_val is not None:
-            return auth_val
+        if request:
+            auth_val = request.headers.get('Authorization')
+            if auth_val is not None:
+                return auth_val
         return None
 
     def current_user(self, request=None) -> TypeVar('User'):
