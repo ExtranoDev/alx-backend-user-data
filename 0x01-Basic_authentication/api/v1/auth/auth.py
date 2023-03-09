@@ -10,8 +10,10 @@ class Auth:
         """collects authentication path"""
         if path is None or excluded_paths in (None, []):
             return True
+        if path[-1] == '/':
+            path = path[:-1]
         for ex_path in excluded_paths:
-            if path in ex_path:
+            if path in ex_path or expath[:-1] in path:
                 return False
         return True
 
