@@ -47,7 +47,9 @@ def forbidden_err(error) -> str:
 
 @app.before_request
 def auth_before_request():
-    """Hanles authentication before request"""
+    """Handles authentication before request
+    Set current user if exist
+    """
     excluded_path = ['/api/v1/status/',
                      '/api/v1/unauthorized/',
                      '/api/v1/forbidden/']

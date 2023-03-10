@@ -23,6 +23,7 @@ def view_one_user(user_id: str = None) -> str:
       - User ID
     Return:
       - User object JSON represented
+      - Saved User object if it exists
       - 404 if the User ID doesn't exist
     """
     cu = request.current_user
