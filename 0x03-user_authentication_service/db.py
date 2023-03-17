@@ -4,6 +4,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.session import Session
 
 from user import Base, User
@@ -34,7 +36,26 @@ class DB:
         """"save the user to the database
             and returns user object"""
         sess_usr = User(email=email, hashed_password=hashed_password)
-        session = self._session
-        session.add(sess_usr)
-        session.commit()
+        self._session.add(sess_usr)
+        self._session.commit()
         return sess_usr
+
+    def find_user_by(self, **kwargs):
+        """takes in arbitrary keyword arguments
+            returns the first row found in the users table
+            filtered by the method’s input arguments
+        """
+        if kwargs is None:
+            raise InvalidRequestError
+        for key in kwargs.keys():
+            if not hasattr(User, key):
+                raise InvalidRequestError
+
+        try:
+            user = self._session.query(User).filter_by(**kwargs).first()
+        except InvalidRequestError:
+            raise InvalidRequestError
+        if user is None:
+            raise NoResultFound
+        else:
+            return user
