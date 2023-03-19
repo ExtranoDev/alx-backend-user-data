@@ -2,6 +2,7 @@
 """API Authentication"""
 from flask import request
 from typing import List, TypeVar
+from os import getenv
 
 
 class Auth:
@@ -27,4 +28,11 @@ class Auth:
 
     def current_user(self, request=None) -> TypeVar('User'):
         """Authenticates current user"""
+        return None
+
+    def session_cookie(self, request=None):
+        """retrieves a cookie value from a request"""
+        if request:
+            sess_env = getenv('SESSION_NAME', None)
+            sess_cookie = request.cookies.get(sess_env, None)
         return None
