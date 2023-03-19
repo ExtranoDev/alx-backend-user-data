@@ -59,10 +59,8 @@ def auth_before_request():
         if auth.require_auth(request.path, excluded_path):
             if auth.authorization_header(request) is None:
                 abort(401)
-                return None
             if auth.current_user(request) is None:
                 abort(403)
-                return None
             request.current_user = auth.current_user(request)
 
 
