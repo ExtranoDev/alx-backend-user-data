@@ -35,4 +35,5 @@ class Auth:
         if request:
             sess_env = getenv('SESSION_NAME', None)
             sess_cookie = request.cookies.get(sess_env, None)
+            return
         return None
