@@ -33,6 +33,6 @@ class Auth:
     def session_cookie(self, request=None):
         """retrieves a cookie value from a request"""
         if request:
-            self.sess_env = getenv('SESSION_NAME', None)
+            self.sess_env = getenv('SESSION_NAME')
             return request.cookies.get(self.sess_env)
         return None
