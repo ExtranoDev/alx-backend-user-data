@@ -18,7 +18,7 @@ def home():
 def users():
     """create user"""
     email = request.form['email']
-    password = request.form['email']
+    password = request.form['password']
     try:
         user = AUTH.register_user(email, password)
         return jsonify({"email": f"{email}", "message": "user created"})
