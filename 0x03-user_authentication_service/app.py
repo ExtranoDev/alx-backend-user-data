@@ -26,5 +26,17 @@ def users():
         return jsonify({"message": "email already registered"}), 400
 
 
+@app.route('/sessions', methods=['POST'], strict_slashes=False)
+def login():
+    """Login user and create session ID for them"""
+    try:
+        user = self._db.find_user_by(email=email)
+        session_id = _generate_uuid()
+        self._db.update_user(user.id, session_id=session_id)
+        return session_id
+    except NoResultFound:
+        return None
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="5000")
