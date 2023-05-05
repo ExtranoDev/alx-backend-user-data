@@ -12,8 +12,8 @@ import os
 @app_views.route('/auth_session/login', method=['POST'], strict_slashes=False)
 def view_session_auth():
     """Authentication Session View"""
-    email = request.form.get('email')
-    password = request.form.get('password')
+    email = request.form.get('email', None)
+    password = request.form.get('password', None)
 
     if not email:
         return jsonify({"error": "email missing"}), 400
