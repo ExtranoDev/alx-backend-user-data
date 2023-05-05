@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""New view for Session Authentication mandatory"""
+"""
+New view for Session Authentication mandatory
+"""
 
 from flask import request, abort, jsonify
 from api.v1.views import app_views
@@ -9,7 +11,7 @@ import os
 
 @app_views.route('/auth_session/login', method=['POST'], strict_slashes=False)
 def view_session_auth():
-    """"""
+    """Authentication Session View"""
     email = request.form.get('email')
     password = request.form.get('password')
 
