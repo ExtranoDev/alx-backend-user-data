@@ -6,6 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.session import Session
 
 from user import Base, User
 
@@ -14,7 +15,7 @@ class DB:
     """DB class
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize a new DB instance
         """
         self._engine = create_engine("sqlite:///a.db", echo=True)
@@ -23,7 +24,7 @@ class DB:
         self.__session = None
 
     @property
-    def _session(self):
+    def _session(self) -> Session:
         """Memoized session object
         """
         if self.__session is None:
@@ -34,27 +35,40 @@ class DB:
     def add_user(self, email: str, hashed_password: str) -> User:
         """"save the user to the database
             and returns user object"""
-        sess_usr = User(email=email, hashed_password=hashed_password)
-        self._session.add(sess_usr)
+        user = User(email=email, hashed_password=hashed_password)
+        self._session.add(user)
         self._session.commit()
-        return sess_usr
+        return user
 
     def find_user_by(self, **kwargs) -> User:
         """takes in arbitrary keyword arguments
             returns the first row found in the users table
             filtered by the method’s input arguments
         """
-        if kwargs is None:
-            raise InvalidRequestError
-        for key in kwargs.keys():
-            if not hasattr(User, key):
-                raise InvalidRequestError
-
         try:
             user = self._session.query(User).filter_by(**kwargs).first()
-        except InvalidRequestError:
-            raise InvalidRequestError
-        if user is None:
-            raise NoResultFound
-        else:
+            if user is None:
+                raise NoResultFound
             return user
+        except AttributeError:
+            raise InvalidRequestError
+
+    def update_user(self, user_id: int, **kw) -> None:
+        """
+        
+        """
+        try:
+            user = self.find_user_by(id=user_id)
+        except NoResultFound:
+            raise ValueError
+
+        try:
+            for key, value in kw.items():
+                if hasattr(User, key):
+                    setattr(user, key, value)
+                else:
+                    raise ValueError
+        except ValueError:
+            raise ValueError
+        self._session.commit()
+        return None
