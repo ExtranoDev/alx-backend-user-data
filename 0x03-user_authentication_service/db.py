@@ -54,8 +54,9 @@ class DB:
             raise InvalidRequestError
 
     def update_user(self, user_id: int, **kw) -> None:
-        """
-        
+        """implements the update_user method
+        takes a required user_id integer
+        arbitrary keyword arguments, and returns None
         """
         try:
             user = self.find_user_by(id=user_id)
