@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """a basic Flask app"""
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
 from auth import Auth
 
 
@@ -29,13 +29,17 @@ def users():
 @app.route('/sessions', methods=['POST'], strict_slashes=False)
 def login():
     """Login user and create session ID for them"""
-    try:
-        user = self._db.find_user_by(email=email)
-        session_id = _generate_uuid()
-        self._db.update_user(user.id, session_id=session_id)
-        return session_id
-    except NoResultFound:
-        return None
+    email = request.form['email']
+    password = request.form['password']
+
+    if AUTH.valid_login(email, password):
+        session_id = AUTH.create_session(email)
+        response = make_response(jsonify({"email": f"{email}",
+                                          "message": "logged in"}))
+        response.set_cookie('session_id', session_id)
+        return response
+    else:
+        abort(401)
 
 
 if __name__ == "__main__":
